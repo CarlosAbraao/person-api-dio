@@ -1,16 +1,33 @@
 package com.carlosdev.personApi.personApi.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.carlosdev.personApi.personApi.dto.MessageResponseDTO;
+import com.carlosdev.personApi.personApi.entities.Person;
+import com.carlosdev.personApi.personApi.repository.PersonRepository;
+import com.carlosdev.personApi.personApi.service.PersonService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequestMapping ("/api/v1/people")
 public class PersonController {
 
-    @GetMapping
-    public String getbook(){
-        return "api Test";
+
+
+    private PersonService personService;
+
+    @Autowired
+    public PersonController(PersonService personService){
+        this.personService = personService;
+
+
+
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public MessageResponseDTO createPerson(@RequestBody Person person){
+        return personService.createPerson(person);
     }
 }
