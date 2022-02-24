@@ -22,12 +22,13 @@ public class PersonService {
     private final PersonMapper personMapper = PersonMapper.INSTACE;
 
     private PersonRepository personRepository;
+
     @Autowired
     public PersonService(PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
 
-    public MessageResponseDTO createPerson(PersonDTO personDTO){
+    public MessageResponseDTO createPerson(PersonDTO personDTO) {
 
         Person personToSave = personMapper.toModel(personDTO);
         Person savedPerson = personRepository.save(personToSave);
@@ -40,19 +41,25 @@ public class PersonService {
 
 
     public List<PersonDTO> listAll() {
-       List<Person> allPeople = personRepository.findAll();
-       return allPeople.stream()
-               .map(personMapper::toDto)
-               .collect(Collectors.toList());
+        List<Person> allPeople = personRepository.findAll();
+        return allPeople.stream()
+                .map(personMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public PersonDTO findById(Long id) throws PersonNotFoundException {
-        Optional<Person> optionalPerson = personRepository.findById(id);
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
+        //REFATORANDO CODIGO -> VOU SUBSTITUIR ESSA LINHA PELA DE CIMA
+        // Optional<Person> optionalPerson = personRepository.findById(id);
 
-        if (optionalPerson.isEmpty()){
-            throw new PersonNotFoundException(id);
-        }
 
-        return personMapper.toDto(optionalPerson.get());
+        // COM A INCLUSÃO DO "ORELSE" POSSO TIRAR A LINHA DE BAIXO COMENTADA
+        //if (optionalPerson.isEmpty()){
+        // throw new PersonNotFoundException(id);
+
+        //NESSE CASO POSSO PASSAR DIRETO A PESSOA
+        //return personMapper.toDto(optionalPerson.get());
+        return personMapper.toDto(person);
     }
 }
