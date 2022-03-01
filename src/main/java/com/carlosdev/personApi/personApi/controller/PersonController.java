@@ -47,6 +47,15 @@ public class PersonController {
         return personService.findById(id);
     }
 
+    // METODO CRIADO DEPOIS DA MUDANÇA DE BRANCH
+
+    @PutMapping("/{id}")
+    public MessageResponseDTO updateById(@PathVariable Long id, @RequestBody @Valid PersonDTO personDTO) throws PersonNotFoundException {
+
+        return personService.updateById(id,personDTO);
+
+    }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
